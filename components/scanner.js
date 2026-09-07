@@ -1,4 +1,4 @@
-﻿const ScannerUI = (() => {
+const ScannerUI = (() => {
   // Restore signals from localStorage so they survive page refresh
   let _signals = BacktestEngine ? BacktestEngine.getAll().filter(s => s.status === 'OPEN').slice(0, 200) : [];
   let _scanning = false, _cancelled = false;
@@ -187,6 +187,18 @@
     renderTable();
   }
 
+  function wrapSMC(text) {
+    if (!text) return '';
+    return text
+      .replace(/FVG/g, '<span class="smc-term" data-tip="Fair Value Gap: An imbalance indicating strong institutional momentum.">FVG</span>')
+      .replace(/Order Block/gi, '<span class="smc-term" data-tip="Order Block: Institutional footprint where large orders were placed.">Order Block</span>')
+      .replace(/Breaker Block/gi, '<span class="smc-term" data-tip="Breaker Block: A failed Order Block swept by price, now acting as strong support/resistance.">Breaker Block</span>')
+      .replace(/Sweep/g, '<span class="smc-term" data-tip="Liquidity Sweep: Price trapping retail stop losses before a reversal.">Sweep</span>')
+      .replace(/BOS/g, '<span class="smc-term" data-tip="Break of Structure: Confirmation of trend continuation.">BOS</span>')
+      .replace(/CHoCH/g, '<span class="smc-term" data-tip="Change of Character: Early sign of a trend reversal.">CHoCH</span>')
+      .replace(/IOFED/g, '<span class="smc-term" data-tip="Institutional Order Flow Entry Drill: Perfect touch of the FVG mid-point.">IOFED</span>');
+  }
+
   function renderTable() {
     const tbody = document.getElementById('sigTbody');
     if (!tbody) return;
@@ -223,7 +235,7 @@
             <span>${gradeLabel} ${conf}%</span>
           </div>
         </td>
-        <td class="setup-col">${(s.setup||'').substring(0,40)}</td>
+        <td class="setup-col">${wrapSMC((s.setup||'').substring(0,60))}</td>
         <td class="mono">$${s.entry}</td>
         <td class="mono red">$${s.sl}</td>
         <td class="mono green">$${s.tp1}</td>

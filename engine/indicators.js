@@ -1,5 +1,5 @@
-﻿/**
- * Technical Indicators — Pure JS implementations
+/**
+ * Technical Indicators - Pure JS implementations
  * EMA, SMA, RSI, MACD, ATR, Bollinger Bands, Volume MA,
  * Stochastic RSI, VWAP, Pivot Points, Fibonacci
  */

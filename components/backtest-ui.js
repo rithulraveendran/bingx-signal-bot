@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Backtest / Performance UI Component
  */
 const BacktestUI = (() => {
@@ -132,8 +132,8 @@ const BacktestUI = (() => {
   function renderRows(signals) {
     return signals.slice(0,200).map(s => {
       const bull = s.direction === 'bullish';
-      const res  = s.result || '—';
-      const pnl  = s.pnlR !== null && s.pnlR !== undefined ? (s.pnlR>=0?'+':'')+s.pnlR+'R' : '—';
+      const res  = s.result || '-';
+      const pnl  = s.pnlR !== null && s.pnlR !== undefined ? (s.pnlR>=0?'+':'')+s.pnlR+'R' : '-';
       const pnlCls = s.pnlR > 0 ? 'green' : s.pnlR < 0 ? 'red' : '';
       const statusCls = s.status==='OPEN'?'cyan':s.status==='CLOSED'?'':'muted';
       const ago = timeAgo(s.createdAt);

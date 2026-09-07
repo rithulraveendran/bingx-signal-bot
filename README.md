@@ -1,4 +1,4 @@
-﻿# BingX Signal Bot 📈
+# BingX Signal Bot 📈
 
 > **Real-time BingX Futures Trading Signal Platform**
 
@@ -6,19 +6,19 @@ A fully browser-based trading signal scanner for BingX perpetual futures. No bac
 
 ## ✨ Features
 
-- **Full BingX Scan** — All 400+ USDT perpetual futures pairs
-- **ICT/SMC Engine** — FVG, Order Blocks, BOS/CHoCH, Liquidity Sweeps, Breaker Blocks
-- **Multi-Timeframe** — 1D→4H (direction), 1H→15M (trend/entry), 5M (confirmation)
-- **CSTI Framework** — Condition, Setup, Trigger, Invalidation for every signal
-- **Confluence Scoring** — 15+ factors scored for high-probability setups
-- **Swing Trade Focus** — 1-2 day hold targets with TP1/TP2/TP3
-- **Performance Tracker** — Auto-closes signals via live price, tracks win rate/PnL
-- **TradingView Charts** — Embedded chart for every signal
-- **GitHub Pages / Vercel Ready** — Zero backend, pure static
+- **Full BingX Scan** - All 400+ USDT perpetual futures pairs
+- **ICT/SMC Engine** - FVG, Order Blocks, BOS/CHoCH, Liquidity Sweeps, Breaker Blocks
+- **Multi-Timeframe** - 1D→4H (direction), 1H→15M (trend/entry), 5M (confirmation)
+- **CSTI Framework** - Condition, Setup, Trigger, Invalidation for every signal
+- **Confluence Scoring** - 15+ factors scored for high-probability setups
+- **Swing Trade Focus** - 1-2 day hold targets with TP1/TP2/TP3
+- **Performance Tracker** - Auto-closes signals via live price, tracks win rate/PnL
+- **TradingView Charts** - Embedded chart for every signal
+- **GitHub Pages / Vercel Ready** - Zero backend, pure static
 
 ## 🚀 Deploy
 
-### Option 1: Vercel (Recommended — shareable link)
+### Option 1: Vercel (Recommended - shareable link)
 ```bash
 npx vercel --prod
 ```
@@ -61,12 +61,12 @@ Each signal is scored from 0–25 points based on:
 
 ## 🧩 ICT Concepts Implemented
 
-- **FVG** (Fair Value Gap) — 3-candle imbalance detection
-- **Consequent Encroachment (CE)** — FVG midpoint
-- **IOFED** — Institutional Order Flow Entry Drill
-- **Order Blocks** — Last opposing candle before BOS
-- **Breaker Blocks** — Failed OBs that flip polarity
-- **BOS / CHoCH** — Break of Structure / Change of Character
-- **Liquidity Sweeps** — BSL/SSL detection
-- **AMD** — Accumulation/Manipulation/Distribution session framework
-- **High-Prob FVG** — FVG + OB, FVG + Breaker, Sweep → FVG
+- **FVG** (Fair Value Gap) - 3-candle imbalance detection
+- **Consequent Encroachment (CE)** - FVG midpoint
+- **IOFED** - Institutional Order Flow Entry Drill
+- **Order Blocks** - Last opposing candle before BOS
+- **Breaker Blocks** - Failed OBs that flip polarity
+- **BOS / CHoCH** - Break of Structure / Change of Character
+- **Liquidity Sweeps** - BSL/SSL detection
+- **AMD** - Accumulation/Manipulation/Distribution session framework
+- **High-Prob FVG** - FVG + OB, FVG + Breaker, Sweep → FVG

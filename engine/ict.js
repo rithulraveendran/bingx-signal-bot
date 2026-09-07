@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ICT / Smart Money Concepts Engine
  * FVG, Order Blocks, BOS/CHoCH, Breaker Blocks,
  * Liquidity Sweeps, AMD Session, Fibonacci, CE, IOFED
@@ -31,7 +31,7 @@ const ICT = (() => {
     return out;
   }
 
-  // ── Market Structure — BOS / CHoCH ────────────────────────────────────────
+  // ── Market Structure - BOS / CHoCH ────────────────────────────────────────
   function detectStructure(candles) {
     const sHigh = swingHighs(candles);
     const sLow  = swingLows(candles);
@@ -99,32 +99,39 @@ const ICT = (() => {
   }
 
   // ── Order Blocks ──────────────────────────────────────────────────────────
-  function detectOrderBlocks(candles, structure) {
+  function detectOrderBlocks(candles, structure, fvgs = []) {
     const obs = [];
     for (const bos of structure.events) {
       if (bos.type === 'BOS_BULL' || bos.type === 'CHoCH_BULL') {
         for (let i = bos.index - 1; i >= Math.max(0, bos.index - 30); i--) {
           if (candles[i].close < candles[i].open) {
-            obs.push({
-              type:'BULL_OB', top:candles[i].high, bottom:candles[i].open,
-              mid:(candles[i].high+candles[i].open)/2,
-              index:i, bosIndex:bos.index, time:candles[i].time,
-              swept:false, isBreaker:false
-            });
-            break;
+            // Require displacement (an FVG forming shortly after the OB)
+            const hasFVG = fvgs.some(f => f.type === 'BULL' && f.index > i && f.index <= i + 4);
+            if (hasFVG || fvgs.length === 0) {
+              obs.push({
+                type:'BULL_OB', top:candles[i].high, bottom:candles[i].open,
+                mid:(candles[i].high+candles[i].open)/2,
+                index:i, bosIndex:bos.index, time:candles[i].time,
+                swept:false, isBreaker:false
+              });
+              break;
+            }
           }
         }
       }
       if (bos.type === 'BOS_BEAR' || bos.type === 'CHoCH_BEAR') {
         for (let i = bos.index - 1; i >= Math.max(0, bos.index - 30); i--) {
           if (candles[i].close > candles[i].open) {
-            obs.push({
-              type:'BEAR_OB', top:candles[i].close, bottom:candles[i].low,
-              mid:(candles[i].close+candles[i].low)/2,
-              index:i, bosIndex:bos.index, time:candles[i].time,
-              swept:false, isBreaker:false
-            });
-            break;
+            const hasFVG = fvgs.some(f => f.type === 'BEAR' && f.index > i && f.index <= i + 4);
+            if (hasFVG || fvgs.length === 0) {
+              obs.push({
+                type:'BEAR_OB', top:candles[i].close, bottom:candles[i].low,
+                mid:(candles[i].close+candles[i].low)/2,
+                index:i, bosIndex:bos.index, time:candles[i].time,
+                swept:false, isBreaker:false
+              });
+              break;
+            }
           }
         }
       }
@@ -150,20 +157,26 @@ const ICT = (() => {
     const start = Math.max(0, candles.length - 60);
     for (let i = start + 1; i < candles.length; i++) {
       const c = candles[i];
-      // BSL sweep: wick above swing high, close back below
+      const body = Math.abs(c.close - c.open) || 0.0001;
+      const topWick = c.high - Math.max(c.open, c.close);
+      const botWick = Math.min(c.open, c.close) - c.low;
+
+      // BSL sweep: wick above swing high, close back below. Wick must be > 1.5x body.
       for (const sh of sHigh) {
-        if (sh.index < i && sh.index >= start - 20 &&
-            c.high > sh.price && c.close < sh.price) {
-          sweeps.push({ type:'BSL', price:sh.price, candleIndex:i, time:c.time });
-          break;
+        if (sh.index < i && sh.index >= start - 20 && c.high > sh.price && c.close < sh.price) {
+          if (topWick > body * 1.5) {
+            sweeps.push({ type:'BSL', price:sh.price, candleIndex:i, time:c.time });
+            break;
+          }
         }
       }
-      // SSL sweep: wick below swing low, close back above
+      // SSL sweep: wick below swing low, close back above. Wick must be > 1.5x body.
       for (const sl of sLow) {
-        if (sl.index < i && sl.index >= start - 20 &&
-            c.low < sl.price && c.close > sl.price) {
-          sweeps.push({ type:'SSL', price:sl.price, candleIndex:i, time:c.time });
-          break;
+        if (sl.index < i && sl.index >= start - 20 && c.low < sl.price && c.close > sl.price) {
+          if (botWick > body * 1.5) {
+            sweeps.push({ type:'SSL', price:sl.price, candleIndex:i, time:c.time });
+            break;
+          }
         }
       }
     }

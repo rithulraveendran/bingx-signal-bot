@@ -1,5 +1,5 @@
-﻿/**
- * App Controller — Routing, Ticker, Toast
+/**
+ * App Controller - Routing, Ticker, Toast
  */
 const App = (() => {
   let _currentPage = 'dashboard';

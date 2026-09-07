@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dashboard Component
  */
 const DashboardUI = (() => {
@@ -11,7 +11,7 @@ const DashboardUI = (() => {
       <div class="dash-header">
         <div>
           <h1 class="page-title">Market Intelligence</h1>
-          <p class="page-sub">Real-time BingX Futures — Multi-timeframe ICT/SMC Analysis</p>
+          <p class="page-sub">Real-time BingX Futures - Multi-timeframe ICT/SMC Analysis</p>
         </div>
         <div class="dash-header-actions">
           <div class="amd-card" id="amdCard">
@@ -23,12 +23,12 @@ const DashboardUI = (() => {
       </div>
 
       <div class="stats-row" id="marketStats">
-        <div class="stat-card"><div class="stat-label">Total Signals (Today)</div><div class="stat-val" id="todaySig">—</div></div>
-        <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-val green" id="winRateStat">—</div></div>
-        <div class="stat-card"><div class="stat-label">Profit Factor</div><div class="stat-val" id="pfStat">—</div></div>
-        <div class="stat-card"><div class="stat-label">Open Signals</div><div class="stat-val cyan" id="openSig">—</div></div>
+        <div class="stat-card"><div class="stat-label">Total Signals (Today)</div><div class="stat-val" id="todaySig">-</div></div>
+        <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-val green" id="winRateStat">-</div></div>
+        <div class="stat-card"><div class="stat-label">Profit Factor</div><div class="stat-val" id="pfStat">-</div></div>
+        <div class="stat-card"><div class="stat-label">Open Signals</div><div class="stat-val cyan" id="openSig">-</div></div>
         <div class="stat-card"><div class="stat-label">BTC Dominance</div><div class="stat-val" id="btcDom">~52%</div></div>
-        <div class="stat-card"><div class="stat-label">Market Bias</div><div class="stat-val" id="mktBias">—</div></div>
+        <div class="stat-card"><div class="stat-label">Market Bias</div><div class="stat-val" id="mktBias">-</div></div>
       </div>
 
       <div class="two-col">
@@ -54,17 +54,17 @@ const DashboardUI = (() => {
         <div class="amd-guide">
           <div class="amd-step">
             <div class="amd-step-dot" style="background:#f59e0b"></div>
-            <div><strong>ACCUMULATION — Asia Session (00:00–08:00 UTC)</strong><br>
+            <div><strong>ACCUMULATION - Asia Session (00:00–08:00 UTC)</strong><br>
               Smart money accumulates positions. Price consolidates in a range. Expect low volatility & fake breakouts. Best time to identify key levels for the day.</div>
           </div>
           <div class="amd-step">
             <div class="amd-step-dot" style="background:#3b82f6"></div>
-            <div><strong>MANIPULATION — London Session (08:00–12:00 UTC)</strong><br>
+            <div><strong>MANIPULATION - London Session (08:00–12:00 UTC)</strong><br>
               Price sweeps liquidity above or below the Asia range (stop hunts). This is the "trap" move. Wait for the sweep + reversal before entering.</div>
           </div>
           <div class="amd-step">
             <div class="amd-step-dot" style="background:#10b981"></div>
-            <div><strong>DISTRIBUTION — New York Session (14:00–20:00 UTC)</strong><br>
+            <div><strong>DISTRIBUTION - New York Session (14:00–20:00 UTC)</strong><br>
               The real move happens here. Price expands in the true direction after manipulation. Entry signals at FVG/OB are highest probability during NY.</div>
           </div>
         </div>
@@ -134,8 +134,8 @@ const DashboardUI = (() => {
     const today = all.filter(s => Date.now() - s.createdAt < 86400000);
     const stats  = BacktestEngine.getStats();
     setEl('todaySig', today.length);
-    setEl('winRateStat', stats ? stats.winRate + '%' : '—');
-    setEl('pfStat', stats ? stats.profitFactor : '—');
+    setEl('winRateStat', stats ? stats.winRate + '%' : '-');
+    setEl('pfStat', stats ? stats.profitFactor : '-');
     setEl('openSig', all.filter(s=>s.status==='OPEN').length);
   }
 

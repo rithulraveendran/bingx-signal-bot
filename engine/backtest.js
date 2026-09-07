@@ -1,5 +1,5 @@
-﻿/**
- * Backtest Engine — Signal Storage & Performance Tracking
+/**
+ * Backtest Engine - Signal Storage & Performance Tracking
  * Uses localStorage for persistence. Polls live prices to auto-close signals.
  */
 const BacktestEngine = (() => {

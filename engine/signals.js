@@ -1,5 +1,5 @@
 /**
- * Signal Generation Engine — CSTI Framework
+ * Signal Generation Engine - CSTI Framework
  */
 const SignalEngine = (() => {
   const MIN_SCORE = 5;   // Lowered from 7
@@ -53,7 +53,7 @@ const SignalEngine = (() => {
 
     const struct = ICT.detectStructure(candles);
     const fvgs   = ICT.detectFVGs(candles);
-    const obs    = ICT.detectOrderBlocks(candles, struct);
+    const obs    = ICT.detectOrderBlocks(candles, struct, fvgs);
     const sweeps = ICT.detectLiquiditySweeps(candles, struct.swingHighs, struct.swingLows);
     const hpfvg  = ICT.highProbFVGs(fvgs, obs, sweeps);
     const bo     = ICT.detectBreakout(candles, volMA);
@@ -104,7 +104,7 @@ const SignalEngine = (() => {
   function buildChecklist(dir, htf, h1, m15, rr, fvg, ob, sweep) {
     const bull = dir==='bullish';
     return [
-      { label:'📈 HTF Trend (1D/4H)', ok: htf.bias!=='ranging', detail:`${htf.bias} — ${htf.strength}% strength` },
+      { label:'📈 HTF Trend (1D/4H)', ok: htf.bias!=='ranging', detail:`${htf.bias} - ${htf.strength}% strength` },
       { label:'🔄 BOS / CHoCH (1H)', ok: !!h1.lastBOS, detail: h1.lastBOS ? h1.lastBOS.type.replace('_',' ') : 'Not confirmed' },
       { label:'🎯 FVG at Entry Zone', ok: !!fvg, detail: fvg ? `${fvg.type} FVG [${fvg.bottom.toFixed(4)}–${fvg.top.toFixed(4)}]` : 'Not present' },
       { label:'🟦 Order Block', ok: !!ob, detail: ob ? `${ob.type.replace('_',' ')}` : 'Not present' },

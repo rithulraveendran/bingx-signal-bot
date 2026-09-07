@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Signal Detail Component
  * Full CSTI breakdown, checklist, TradingView chart, trade copy
  */
@@ -78,6 +78,29 @@ const DetailUI = (() => {
           <button class="btn btn-full mt16" onclick="DetailUI.copyTrade()">📋 Copy Trade Parameters</button>
         </div>
 
+        <!-- Position Size Calculator -->
+        <div class="panel calc-panel">
+          <div class="panel-header"><span>🧮 Position Size Calculator</span></div>
+          <div class="calc-grid">
+            <div class="calc-input">
+              <label>Account Size (USDT)</label>
+              <input type="number" id="calcAcc" value="1000" oninput="DetailUI.calcPos()">
+            </div>
+            <div class="calc-input">
+              <label>Risk %</label>
+              <input type="number" id="calcRisk" value="1" step="0.5" max="5" oninput="DetailUI.calcPos()">
+            </div>
+            <div class="calc-result">
+              <label>Position Size (USDT)</label>
+              <div id="calcRes" class="res-val mono cyan">$0.00</div>
+            </div>
+            <div class="calc-result">
+              <label>Amount to Risk</label>
+              <div id="calcRiskAmt" class="res-val mono red">$0.00</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Checklist -->
         <div class="panel">
           <div class="panel-header"><span>✅ Pre-Trade Checklist</span></div>
@@ -148,6 +171,7 @@ const DetailUI = (() => {
       </div>`;
 
     updateChart();
+    setTimeout(calcPos, 100);
   }
 
   function indItem(label, val, cls) {
@@ -194,7 +218,7 @@ const DetailUI = (() => {
   function copyTrade() {
     const s = _currentSignal;
     if (!s) return;
-    const text = `BingX Signal — ${s.pair} ${s.direction.toUpperCase()}
+    const text = `BingX Signal - ${s.pair} ${s.direction.toUpperCase()}
 Entry:  $${s.entry}
 SL:     $${s.sl}  (risk ${s.riskPct}%)
 TP1:    $${s.tp1}
@@ -209,5 +233,21 @@ Invalidation: ${s.invalidation}
     navigator.clipboard.writeText(text).then(() => App.toast('✅ Trade parameters copied!', 'success'));
   }
 
-  return { render, updateChart, copyTrade };
+  function calcPos() {
+    if (!_currentSignal) return;
+    const acc = parseFloat(document.getElementById('calcAcc')?.value || 0);
+    const risk = parseFloat(document.getElementById('calcRisk')?.value || 0);
+    const riskAmt = acc * (risk / 100);
+    const slDistPct = _currentSignal.riskPct / 100;
+    
+    let posSize = 0;
+    if (slDistPct > 0) {
+      posSize = riskAmt / slDistPct;
+    }
+    
+    document.getElementById('calcRiskAmt').innerText = `$${riskAmt.toFixed(2)}`;
+    document.getElementById('calcRes').innerText = `$${posSize.toFixed(2)}`;
+  }
+
+  return { render, updateChart, copyTrade, calcPos };
 })();

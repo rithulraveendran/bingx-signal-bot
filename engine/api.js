@@ -1,5 +1,5 @@
-﻿/**
- * BingX API — routes through /api/proxy (Vercel serverless) to avoid CORS
+/**
+ * BingX API - routes through /api/proxy (Vercel serverless) to avoid CORS
  */
 const BingXAPI = (() => {
   const BINGX = 'https://open-api.bingx.com';
@@ -20,22 +20,30 @@ const BingXAPI = (() => {
     return BINGX + path + (qs ? '?' + qs : '');
   }
 
-  function _fetch(url) {
+  function _fetch(url, retries = 3) {
     return new Promise((resolve, reject) => {
-      queue.push({ url, resolve, reject });
+      queue.push({ url, resolve, reject, retries });
       _drain();
     });
   }
 
   async function _drain() {
     if (running >= CONCURRENCY || queue.length === 0) return;
-    const { url, resolve, reject } = queue.shift();
+    const { url, resolve, reject, retries } = queue.shift();
     running++;
     try {
       const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (r.status === 429 || r.status >= 500) throw new Error('HTTP ' + r.status);
       if (!r.ok) throw new Error('HTTP ' + r.status);
       resolve(await r.json());
-    } catch (e) { reject(e); } finally {
+    } catch (e) {
+      if (retries > 0) {
+        const backoff = (4 - retries) * 1500; // 1.5s, 3.0s, 4.5s
+        setTimeout(() => { queue.push({ url, resolve, reject, retries: retries - 1 }); _drain(); }, backoff);
+      } else {
+        reject(e);
+      }
+    } finally {
       running--;
       setTimeout(_drain, DELAY_MS);
       _drain();
