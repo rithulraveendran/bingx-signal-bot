@@ -1,5 +1,7 @@
-﻿const ScannerUI = (() => {
-  let _signals = [], _scanning = false, _cancelled = false;
+const ScannerUI = (() => {
+  // Restore signals from localStorage so they survive page refresh
+  let _signals = BacktestEngine ? BacktestEngine.getAll().filter(s => s.status === 'OPEN').slice(0, 200) : [];
+  let _scanning = false, _cancelled = false;
   let _filter = { dir:'all', minConf:40, sort:'conf' };
   let _stats = { analyzed:0, total:0, ranging:0, noData:0, lowScore:0 };
 
@@ -40,6 +42,9 @@
             <option value="40" selected>40%+</option>
             <option value="50">50%+</option>
             <option value="60">60%+</option>
+            <option value="70">70%+</option>
+            <option value="80">80%+</option>
+            <option value="90">90%+</option>
           </select>
         </div>
         <div class="filter-group">
