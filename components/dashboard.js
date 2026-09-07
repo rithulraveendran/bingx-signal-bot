@@ -22,7 +22,7 @@ const DashboardUI = (() => {
         </div>
       </div>
 
-      <div class="stats-row" id="marketStats">
+      <div class="dash-grid" id="marketStats">
         <div class="stat-card"><div class="stat-label">Total Signals (Today)</div><div class="stat-val" id="todaySig">-</div></div>
         <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-val green" id="winRateStat">-</div></div>
         <div class="stat-card"><div class="stat-label">Profit Factor</div><div class="stat-val" id="pfStat">-</div></div>

@@ -576,3 +576,133 @@ body::before {
 .calc-input input:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 .calc-result { padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border); }
 .res-val { font-size: 1.1rem; font-weight: 700; }
+
+/* ── iOS 26 Perfect Replica Theme System ── */
+:root {
+  --radius: 24px;       /* iOS Squircle */
+  --radius-sm: 14px;    /* Inner cards */
+  --spring: cubic-bezier(0.2, 0.8, 0.2, 1.2); /* Spring physics */
+  --ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --cyan: #007AFF;      /* Apple System Blue */
+  --cyan2: #5E5CE6;     /* Apple Indigo */
+  --green: #34C759;     /* Apple System Green */
+  --green2: #30D158;
+  --red: #FF3B30;       /* Apple System Red */
+  --red2: #FF453A;
+  --amber: #FF9F0A;     /* Apple System Orange */
+  --purple: #BF5AF2;    /* Apple System Purple */
+  --blue: #0A84FF;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --bg2: rgba(28, 28, 30, 0.8);
+  --bg3: rgba(44, 44, 46, 0.8);
+  --card: rgba(44, 44, 46, 0.55);
+  --card-h: rgba(58, 58, 60, 0.65);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-h: rgba(255, 255, 255, 0.15);
+  --text: #FFFFFF;
+  --text2: #EBEBF599; /* Secondary label */
+  --text3: #EBEBF54D; /* Tertiary label */
+  --glass-blur: blur(40px) saturate(200%);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] {
+  --bg: #F2F2F7;        /* iOS Light System Grouped Background */
+  --bg2: rgba(255, 255, 255, 0.8);
+  --bg3: rgba(255, 255, 255, 0.9);
+  --card: rgba(255, 255, 255, 0.65);
+  --card-h: rgba(255, 255, 255, 0.85);
+  --border: rgba(0, 0, 0, 0.05);
+  --border-h: rgba(0, 0, 0, 0.1);
+  --text: #000000;
+  --text2: #3C3C4399;
+  --text3: #3C3C434D;
+  --glass-blur: blur(40px) saturate(150%);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+  letter-spacing: -0.015em;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+/* Base Glassmorphism Updates */
+.navbar {
+  background: var(--bg2) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 0.5px solid var(--border) !important;
+  transition: background 0.4s, border 0.4s;
+}
+
+.theme-toggle {
+  background: transparent; border: none; cursor: pointer; color: var(--text);
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; transition: all 0.2s;
+}
+.theme-toggle:hover { background: var(--card); }
+.theme-toggle svg { width: 20px; height: 20px; }
+
+/* Apply Apple Vibrancy to Cards */
+.stat-card, .chart-card, .widget, .setup-box, .sig-row, .panel {
+  background: var(--card) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 0.5px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  border-radius: var(--radius) !important;
+  transition: all 0.4s var(--spring) !important;
+}
+
+.stat-card:hover, .sig-row:hover {
+  background: var(--card-h) !important;
+  border-color: var(--border-h) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Remove gradient glow if in light mode, keep clean */
+[data-theme="light"] .brand-icon { box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+
+/* iOS Inset Grouped List for Scanner */
+.sig-table-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+  backdrop-filter: var(--glass-blur);
+  border: 0.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.sig-table th { background: transparent; border-bottom: 0.5px solid var(--border); color: var(--text2); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+.sig-row { border-radius: 0 !important; border: none !important; border-bottom: 0.5px solid var(--border) !important; background: transparent !important; box-shadow: none !important; }
+.sig-row:last-child { border-bottom: none !important; }
+.sig-row:hover { background: var(--card-h) !important; transform: none !important; }
+
+/* Dashboard Widget Layout Fixes */
+.dash-grid { gap: 20px; }
+.stat-card { border-radius: var(--radius); display: flex; flex-direction: column; justify-content: space-between; padding: 24px; }
+.stat-val { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.04em; }
+
+/* Detail Popover Card */
+.detail-hero { border-radius: var(--radius); margin-bottom: 20px; padding: 30px; }
+.panel { border-radius: var(--radius); overflow: hidden; padding: 24px; margin-bottom: 20px; }
+/* Dashboard iOS Widget Layout */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .two-col { grid-template-columns: 1fr; }
+}

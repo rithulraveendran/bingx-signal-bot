@@ -9,6 +9,7 @@ const App = (() => {
   // ── Bootstrap ───────────────────────────────────────────────────────────────
   async function init() {
     setupTabs();
+    initTheme();
     DashboardUI.render();
     ScannerUI.render();
     BacktestUI.render();
@@ -17,6 +18,32 @@ const App = (() => {
     DashboardUI.updateSignals(BacktestEngine.getAll().filter(s => s.status === 'OPEN'));
     // Store all signals in memory for detail lookup
     BacktestEngine.getAll().forEach(s => { _signalStore[s.id] = s; });
+  }
+
+  // ── Theme Management ────────────────────────────────────────────────────────
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+    setTheme(theme);
+  }
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    const icon = document.getElementById('themeIcon');
+    if (icon) {
+      if (theme === 'dark') {
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>'; // Moon
+      } else {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'; // Sun
+      }
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    setTheme(current === 'dark' ? 'light' : 'dark');
   }
 
   // ── Tab Navigation ───────────────────────────────────────────────────────────
@@ -112,5 +139,5 @@ const App = (() => {
   }
 
   window.addEventListener('DOMContentLoaded', init);
-  return { goTo, showDetail, quickScan, toast };
+  return { goTo, showDetail, quickScan, toast, toggleTheme };
 })();
