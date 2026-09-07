@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BingX Signal Bot — Futures Trading Signals</title>
+  <meta name="description" content="Real-time BingX perpetual futures trading signals powered by ICT/SMC multi-timeframe confluence analysis." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">BingX<span class="brand-accent">Signal</span></span>
+        <span class="brand-sub">Futures Intelligence</span>
+      </div>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-page="dashboard" id="tab-dashboard">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/></svg>Dashboard
+      </button>
+      <button class="nav-tab" data-page="scanner" id="tab-scanner">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>Scanner
+        <span class="tab-badge" id="scannerBadge" style="display:none">0</span>
+      </button>
+      <button class="nav-tab" data-page="backtest" id="tab-backtest">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>Performance
+      </button>
+    </div>
+    <div class="nav-right">
+      <div class="session-badge" id="sessionBadge"><span class="session-dot" id="sessionDot"></span><span id="sessionLabel">Loading…</span></div>
+      <div class="live-pill"><span class="pulse-ring"></span><span>LIVE</span></div>
+    </div>
+  </nav>
+  <div class="ticker-wrap"><div class="ticker-inner" id="tickerInner"><span class="ticker-loading">Connecting to BingX market feed…</span></div></div>
+  <main class="main">
+    <div class="page active" id="page-dashboard"><div id="dashboardRoot"></div></div>
+    <div class="page" id="page-scanner"><div id="scannerRoot"></div></div>
+    <div class="page" id="page-detail"><div id="detailRoot"></div></div>
+    <div class="page" id="page-backtest"><div id="backtestRoot"></div></div>
+  </main>
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="engine/api.js"></script>
+  <script src="engine/indicators.js"></script>
+  <script src="engine/ict.js"></script>
+  <script src="engine/signals.js"></script>
+  <script src="engine/backtest.js"></script>
+  <script src="components/dashboard.js"></script>
+  <script src="components/scanner.js"></script>
+  <script src="components/detail.js"></script>
+  <script src="components/backtest-ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
