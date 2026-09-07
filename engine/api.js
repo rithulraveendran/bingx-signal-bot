@@ -1,13 +1,24 @@
 ﻿/**
- * BingX Public API Wrapper
- * NOTE: BingX API requires HTTPS origin. Works on Vercel/GitHub Pages.
- * On localhost, use: npx http-server --cors (or deploy to get real data)
+ * BingX API — routes through /api/proxy (Vercel serverless) to avoid CORS
  */
 const BingXAPI = (() => {
-  const BASE = 'https://open-api.bingx.com';
+  const BINGX = 'https://open-api.bingx.com';
   const CONCURRENCY = 6;
   const DELAY_MS = 80;
   let queue = [], running = 0;
+
+  // Detect if we are on Vercel (use proxy) or local (try direct)
+  const USE_PROXY = location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
+  const PROXY_BASE = '/api/proxy';
+
+  function _buildUrl(path, params = {}) {
+    if (USE_PROXY) {
+      const qs = new URLSearchParams({ path, ...params }).toString();
+      return PROXY_BASE + '?' + qs;
+    }
+    const qs = new URLSearchParams(params).toString();
+    return BINGX + path + (qs ? '?' + qs : '');
+  }
 
   function _fetch(url) {
     return new Promise((resolve, reject) => {
@@ -21,11 +32,8 @@ const BingXAPI = (() => {
     const { url, resolve, reject } = queue.shift();
     running++;
     try {
-      const r = await fetch(url, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       resolve(await r.json());
     } catch (e) { reject(e); } finally {
       running--;
@@ -34,20 +42,19 @@ const BingXAPI = (() => {
     }
   }
 
-  async function _safeFetch(url) {
+  async function _safe(url) {
     try { return await _fetch(url); }
-    catch (e) { console.warn('[BingXAPI] Fetch failed:', e.message); return null; }
+    catch (e) { console.warn('[API]', e.message); return null; }
   }
 
   async function getContracts() {
-    const d = await _safeFetch(BASE + '/openApi/swap/v2/quote/contracts');
+    const d = await _safe(_buildUrl('/openApi/swap/v2/quote/contracts'));
     return (d && d.data) ? d.data : [];
   }
 
   async function getKlines(symbol, interval, limit = 200) {
-    const url = BASE + '/openApi/swap/v3/quote/klines?symbol=' + encodeURIComponent(symbol) +
-                '&interval=' + interval + '&limit=' + limit;
-    const d = await _safeFetch(url);
+    const url = _buildUrl('/openApi/swap/v3/quote/klines', { symbol, interval, limit });
+    const d = await _safe(url);
     if (!d || !d.data) return [];
     return d.data.map(k => ({
       time:   parseInt(k.time   ?? k[0]),
@@ -61,7 +68,7 @@ const BingXAPI = (() => {
   }
 
   async function getAllTickers() {
-    const d = await _safeFetch(BASE + '/openApi/swap/v2/quote/ticker');
+    const d = await _safe(_buildUrl('/openApi/swap/v2/quote/ticker'));
     if (!d || !d.data) return [];
     const arr = Array.isArray(d.data) ? d.data : Object.values(d.data);
     return arr
@@ -70,7 +77,7 @@ const BingXAPI = (() => {
   }
 
   async function getPrice(symbol) {
-    const d = await _safeFetch(BASE + '/openApi/swap/v2/quote/price?symbol=' + encodeURIComponent(symbol));
+    const d = await _safe(_buildUrl('/openApi/swap/v2/quote/price', { symbol }));
     return (d && d.data) ? parseFloat(d.data.price) : null;
   }
 
