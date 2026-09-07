@@ -1,4 +1,4 @@
-const ScannerUI = (() => {
+﻿const ScannerUI = (() => {
   // Restore signals from localStorage so they survive page refresh
   let _signals = BacktestEngine ? BacktestEngine.getAll().filter(s => s.status === 'OPEN').slice(0, 200) : [];
   let _scanning = false, _cancelled = false;
@@ -15,14 +15,14 @@ const ScannerUI = (() => {
           <p class="page-sub">Scans all BingX USDT perpetual futures for ICT/SMC setups</p>
         </div>
         <div class="scanner-controls">
-          <button class="btn btn-primary" id="scanBtn" onclick="ScannerUI.startScan()">⚡ Scan All Pairs</button>
-          <button class="btn btn-ghost" id="cancelBtn" style="display:none" onclick="ScannerUI.cancelScan()">✕ Cancel</button>
+          <button class="btn btn-primary" id="scanBtn" onclick="ScannerUI.startScan()">âš¡ Scan All Pairs</button>
+          <button class="btn btn-ghost" id="cancelBtn" style="display:none" onclick="ScannerUI.cancelScan()">âœ• Cancel</button>
         </div>
       </div>
 
       <div class="progress-wrap" id="progressWrap" style="display:none">
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
-        <div class="progress-text" id="progressText">Initializing…</div>
+        <div class="progress-text" id="progressText">Initializingâ€¦</div>
         <div class="scan-stats" id="scanStats"></div>
       </div>
 
@@ -31,8 +31,8 @@ const ScannerUI = (() => {
           <label>Direction</label>
           <select id="filterDir" onchange="ScannerUI.applyFilter()">
             <option value="all">All</option>
-            <option value="bullish">🟢 Long</option>
-            <option value="bearish">🔴 Short</option>
+            <option value="bullish">ðŸŸ¢ Long</option>
+            <option value="bearish">ðŸ”´ Short</option>
           </select>
         </div>
         <div class="filter-group">
@@ -50,8 +50,8 @@ const ScannerUI = (() => {
         <div class="filter-group">
           <label>Sort By</label>
           <select id="filterSort" onchange="ScannerUI.applyFilter()">
-            <option value="conf">Confidence ↓</option>
-            <option value="rr">R:R ↓</option>
+            <option value="conf">Confidence â†“</option>
+            <option value="rr">R:R â†“</option>
             <option value="time">Newest First</option>
           </select>
         </div>
@@ -89,19 +89,19 @@ const ScannerUI = (() => {
     if (btn) btn.disabled = true;
     if (cancelBtn) cancelBtn.style.display = 'inline-flex';
     if (pw) pw.style.display = 'block';
-    setProgress(0, 'Fetching BingX market data…');
+    setProgress(0, 'Fetching BingX market dataâ€¦');
 
     try {
       // Get all tickers sorted by volume
-      setProgress(2, 'Loading all pairs from BingX…');
+      setProgress(2, 'Loading all pairs from BingXâ€¦');
       const tickers = await BingXAPI.getAllTickers();
       const symbols = tickers
         .filter(t => t.symbol && t.symbol.endsWith('-USDT'))
         .map(t => t.symbol);
 
       _stats.total = symbols.length;
-      setProgress(5, `Found ${symbols.length} pairs. Starting analysis…`);
-      App.toast(`🔍 Scanning ${symbols.length} pairs…`, 'info');
+      setProgress(5, `Found ${symbols.length} pairs. Starting analysisâ€¦`);
+      App.toast(`ðŸ” Scanning ${symbols.length} pairsâ€¦`, 'info');
 
       // Process in batches of 5 (conservative for proxy)
       const BATCH = 5;
@@ -141,7 +141,7 @@ const ScannerUI = (() => {
             _stats.analyzed++;
             const pct = Math.round(_stats.analyzed / _stats.total * 90) + 5;
             setProgress(pct,
-              `Analyzed ${_stats.analyzed}/${_stats.total} pairs — 🟢 ${_signals.length} signals found`);
+              `Analyzed ${_stats.analyzed}/${_stats.total} pairs â€” ðŸŸ¢ ${_signals.length} signals found`);
             updateScanStats();
           }
         }));
@@ -151,16 +151,16 @@ const ScannerUI = (() => {
       }
 
     } catch (e) {
-      App.toast('❌ Scan error: ' + e.message, 'error');
+      App.toast('âŒ Scan error: ' + e.message, 'error');
       console.error(e);
     }
 
-    setProgress(100, `✅ Done! Analyzed ${_stats.analyzed} pairs — ${_signals.length} signals found`);
+    setProgress(100, `âœ… Done! Analyzed ${_stats.analyzed} pairs â€” ${_signals.length} signals found`);
     setTimeout(() => { const pw2 = document.getElementById('progressWrap'); if(pw2) pw2.style.display='none'; }, 5000);
     _scanning = false;
     if (btn) btn.disabled = false;
     if (cancelBtn) cancelBtn.style.display = 'none';
-    App.toast(`✅ Scan complete! ${_signals.length} signals found`, 'success');
+    App.toast(`âœ… Scan complete! ${_signals.length} signals found`, 'success');
     DashboardUI.updateStats();
   }
 
@@ -175,9 +175,9 @@ const ScannerUI = (() => {
   function updateScanStats() {
     const el = document.getElementById('scanStats');
     if (!el) return;
-    el.innerHTML = `<span>✅ Signals: <strong>${_signals.length}</strong></span>
-      <span>📊 Ranging: <strong>${_stats.ranging}</strong></span>
-      <span>❌ No data: <strong>${_stats.noData}</strong></span>`;
+    el.innerHTML = `<span>âœ… Signals: <strong>${_signals.length}</strong></span>
+      <span>ðŸ“Š Ranging: <strong>${_stats.ranging}</strong></span>
+      <span>âŒ No data: <strong>${_stats.noData}</strong></span>`;
   }
 
   function applyFilter() {
@@ -204,7 +204,7 @@ const ScannerUI = (() => {
 
     if (sigs.length === 0) {
       tbody.innerHTML = `<tr><td colspan="11" class="empty-cell">${_scanning
-        ? '⏳ Scanning in progress…'
+        ? 'â³ Scanning in progressâ€¦'
         : 'No signals yet. Lower the confidence filter or run a scan.'}</td></tr>`;
       return;
     }
@@ -212,14 +212,15 @@ const ScannerUI = (() => {
     tbody.innerHTML = sigs.map(s => {
       const bull = s.direction === 'bullish';
       const conf = s.confidence;
-      const confClass = conf>=65?'conf-high':conf>=45?'conf-mid':'conf-low';
+      const confClass = conf>=72?'conf-high':conf>=56?'conf-mid':'conf-low';
+      const gradeLabel = s.grade ? s.grade.emoji + ' ' + s.grade.label : conf + '%';
       return `<tr class="sig-row ${bull?'bull-row':'bear-row'}" onclick="App.showDetail('${s.id}')">
         <td><strong>${s.pair}</strong></td>
-        <td><span class="dir-badge ${bull?'bull':'bear'}">${bull?'↑ LONG':'↓ SHORT'}</span></td>
+        <td><span class="dir-badge ${bull?'bull':'bear'}">${bull?'â†‘ LONG':'â†“ SHORT'}</span></td>
         <td>
           <div class="conf-bar-wrap">
             <div class="conf-bar ${confClass}" style="width:${conf}%"></div>
-            <span>${conf}%</span>
+            <span>${gradeLabel} ${conf}%</span>
           </div>
         </td>
         <td class="setup-col">${(s.setup||'').substring(0,40)}</td>
@@ -229,7 +230,7 @@ const ScannerUI = (() => {
         <td class="mono green">$${s.tp2}</td>
         <td><span class="rr-badge">1:${s.rr}</span></td>
         <td><span style="color:${s.session?.color};font-size:.7rem">${s.session?.emoji} ${s.session?.name||''}</span></td>
-        <td><button class="btn-xs" onclick="event.stopPropagation();App.showDetail('${s.id}')">View →</button></td>
+        <td><button class="btn-xs" onclick="event.stopPropagation();App.showDetail('${s.id}')">View â†’</button></td>
       </tr>`;
     }).join('');
   }
@@ -253,3 +254,4 @@ const ScannerUI = (() => {
 
   return { render, startScan, cancelScan, applyFilter, getSignals, quickScan };
 })();
+

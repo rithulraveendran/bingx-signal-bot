@@ -259,8 +259,19 @@ const SignalEngine = (() => {
     const rr   = Math.abs(tp1 - entry) / (risk || 1);
     if (rr < MIN_RR) return null;
 
-    const MAX_SCORE = 14; // Realistic max — no single setup hits all factors
-    const confidence = Math.min(Math.round(score / MAX_SCORE * 100), 95);
+    // ── Realistic Confidence Scoring ──────────────────────────────────────
+    // No signal is ever "95% confident" in real trading.
+    // Scale: MIN_SCORE (5pts) → 42% ... best real-world setup (14pts) → 78%
+    // Grade: A+ (72-78%) | A (65-71%) | B (56-64%) | C (42-55%)
+    const MAX_SCORE = 14;
+    const rawRatio  = Math.min(score / MAX_SCORE, 1);
+    const confidence = Math.round(42 + rawRatio * 36); // Range: 42–78%
+
+    const grade = confidence >= 72 ? { label:'A+', emoji:'🔥', desc:'Elite Setup' }
+                : confidence >= 65 ? { label:'A',  emoji:'✅', desc:'High Quality' }
+                : confidence >= 56 ? { label:'B',  emoji:'📊', desc:'Good Setup'  }
+                :                    { label:'C',  emoji:'⚠️', desc:'Moderate'    };
+
     const trigger    = candlePattern(
       m15Candles && m15Candles[m15Candles.length-1],
       m15Candles && m15Candles[m15Candles.length-2],
@@ -277,6 +288,7 @@ const SignalEngine = (() => {
       pair: symbol.replace('-USDT', '/USDT'),
       direction: dir,
       confidence,
+      grade,
       score,
       passCount,
       totalChecks: checklist.length,

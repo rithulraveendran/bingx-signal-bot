@@ -162,7 +162,7 @@ const DashboardUI = (() => {
       <div class="sig-card-top">
         <span class="sig-pair">${s.pair}</span>
         <span class="sig-dir ${bull?'bull':'bear'}">${bull?'↑ LONG':'↓ SHORT'}</span>
-        <span class="sig-conf">${s.confidence}% conf</span>
+        <span class="sig-conf">${s.grade ? s.grade.emoji + " " + s.grade.label + " · " : ""}${s.confidence}%</span>
       </div>
       <div class="sig-card-mid">
         <div class="sig-lvl"><span>Entry</span><strong>$${s.entry}</strong></div>
@@ -187,3 +187,4 @@ const DashboardUI = (() => {
 
   return { render, updateSignals, loadMarketMovers, updateStats };
 })();
+
