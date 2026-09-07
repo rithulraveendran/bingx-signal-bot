@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Signal Generation Engine — CSTI Framework
  */
 const SignalEngine = (() => {
@@ -259,7 +259,7 @@ const SignalEngine = (() => {
     const rr   = Math.abs(tp1 - entry) / (risk || 1);
     if (rr < MIN_RR) return null;
 
-    const MAX_SCORE = 25;
+    const MAX_SCORE = 14; // Realistic max — no single setup hits all factors
     const confidence = Math.min(Math.round(score / MAX_SCORE * 100), 95);
     const trigger    = candlePattern(
       m15Candles && m15Candles[m15Candles.length-1],
