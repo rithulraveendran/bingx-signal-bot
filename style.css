@@ -488,3 +488,7 @@ body::before {
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border-h); border-radius:99px; }
 ::-webkit-scrollbar-thumb:hover { background:var(--text3); }
+
+/* ── Scan Stats ──────────────────────────────────────────────── */
+.scan-stats { display:flex; gap:16px; justify-content:center; margin-top:6px; font-size:.72rem; color:var(--text2); }
+.scan-stats strong { color:var(--text); }
